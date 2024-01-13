@@ -30,6 +30,12 @@ contract UndisclosedTransferTest is Test {
         recipient = makeAddr("recipient");
     }
 
+    function testDeposit() public {
+        publicSide.deposit{value: DEPOSIT_AMOUNT}(sender);
+
+        assertEq(secretSide.balances(sender), DEPOSIT_AMOUNT, "Sender balance should increase after deposit");
+    }
+
     function testTransfer() public {
         publicSide.deposit{value: DEPOSIT_AMOUNT}(sender);
 
