@@ -3,7 +3,9 @@ pragma solidity ^0.8.20;
 
 import { Test } from "forge-std/Test.sol";
 import { Escrow } from "../src/evm/Escrow.sol";
-import { Gateway, EvmContract, SecretContract } from "../src/evm/UndisclosedTransfer.sol";
+import { Gateway } from "../src/evm/Gateway.sol";
+import { EvmContract } from "../src/evm/EvmContract.sol";
+import { SecretContract } from "../src/evm/SecretContract.sol";
 
 contract UndisclosedTransferTest is Test {
     Gateway gateway;
