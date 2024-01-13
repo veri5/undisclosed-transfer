@@ -37,10 +37,16 @@ cd undisclosed-transfer
 make install
 ```
 
-4. build the project:
+4. Build the project:
 
 ```bash
 make all
+```
+
+5. Run project tests:
+
+```bash
+make test
 ```
 
 # Usage
