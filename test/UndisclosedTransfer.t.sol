@@ -3,12 +3,12 @@ pragma solidity ^0.8.20;
 
 import { Test } from "forge-std/Test.sol";
 import { Escrow } from "../src/evm/Escrow.sol";
-import { Gateway, PublicSide, SecretSide } from "../src/evm/UndisclosedTransfer.sol";
+import { Gateway, EvmContract, SecretContract } from "../src/evm/UndisclosedTransfer.sol";
 
 contract UndisclosedTransferTest is Test {
     Gateway gateway;
-    PublicSide publicSide;
-    SecretSide secretSide;
+    EvmContract evmContract;
+    SecretContract secretContract;
 
     address escrowAddress;
     address gatewayAddress;
@@ -23,25 +23,25 @@ contract UndisclosedTransferTest is Test {
         escrowAddress = address(new Escrow(makeAddr("owner")));
         gateway = new Gateway();
         gatewayAddress = address(gateway);
-        publicSide = new PublicSide(escrowAddress, gatewayAddress);
-        secretSide = new SecretSide(gatewayAddress);
-        gateway.setContracts(address(publicSide), address(secretSide));
+        evmContract = new EvmContract(escrowAddress, gatewayAddress);
+        secretContract = new SecretContract(gatewayAddress);
+        gateway.setContracts(address(evmContract), address(secretContract));
         sender = makeAddr("sender");
         recipient = makeAddr("recipient");
     }
 
     function testDeposit() public {
-        publicSide.deposit{value: DEPOSIT_AMOUNT}(sender);
+        evmContract.deposit{value: DEPOSIT_AMOUNT}(sender);
 
-        assertEq(secretSide.balances(sender), DEPOSIT_AMOUNT, "Sender balance should increase after deposit");
+        assertEq(secretContract.balances(sender), DEPOSIT_AMOUNT, "Sender balance should increase after deposit");
     }
 
     function testTransfer() public {
-        publicSide.deposit{value: DEPOSIT_AMOUNT}(sender);
+        evmContract.deposit{value: DEPOSIT_AMOUNT}(sender);
 
-        secretSide.transfer(sender, recipient, TRANSFER_AMOUNT);
+        secretContract.transfer(sender, recipient, TRANSFER_AMOUNT);
 
-        assertEq(secretSide.balances(sender), DEPOSIT_AMOUNT - TRANSFER_AMOUNT, "Sender balance should decrease");
+        assertEq(secretContract.balances(sender), DEPOSIT_AMOUNT - TRANSFER_AMOUNT, "Sender balance should decrease");
         assertEq(address(recipient).balance, TRANSFER_AMOUNT, "Recipient should now hold TRANSFER_AMOUNT");
     }
 }

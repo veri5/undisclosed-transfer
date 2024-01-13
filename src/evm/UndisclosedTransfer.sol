@@ -4,12 +4,12 @@ pragma solidity ^0.8.20;
 import { Escrow } from "./Escrow.sol";
 
 contract Gateway {
-    PublicSide publicSide;
-    SecretSide secretSide;
+    EvmContract evmContract;
+    SecretContract secretContract;
 
-    function setContracts(address publicSideAddress, address secretSideAddress) external {
-        publicSide = PublicSide(publicSideAddress);
-        secretSide = SecretSide(secretSideAddress);
+    function setContracts(address evmContractAddress, address secretContractAddress) external {
+        evmContract = EvmContract(evmContractAddress);
+        secretContract = SecretContract(secretContractAddress);
     }
 
     function _executeSecret(
@@ -17,7 +17,7 @@ contract Gateway {
         string calldata /*sourceAddress*/,
         bytes calldata payload
     ) external {
-        secretSide._execute("", "", payload);
+        secretContract._execute("", "", payload);
     }
 
     function _executePublic(
@@ -25,11 +25,11 @@ contract Gateway {
         string calldata /*sourceAddress*/,
         bytes calldata payload
     ) external {
-        publicSide._execute("", "", payload);
+        evmContract._execute("", "", payload);
     }
 }
 
-contract PublicSide {
+contract EvmContract {
     Escrow public escrow;
     Gateway public gateway;
 
@@ -62,7 +62,7 @@ contract PublicSide {
     }
 }
 
-contract SecretSide {
+contract SecretContract {
     Gateway public gateway;
 
     mapping(address => uint256) public balances;
