@@ -35,7 +35,8 @@ contract UndisclosedTransferTest is Test {
     function testDeposit() public {
         evmContract.deposit{value: DEPOSIT_AMOUNT}(sender);
 
-        assertEq(secretContract.balances(sender), DEPOSIT_AMOUNT, "Sender balance should increase after deposit");
+        assertEq(secretContract.balances(sender), DEPOSIT_AMOUNT, "Sender Secret balance should increase after deposit");
+        assertEq(address(sender).balance, 0, "Sender EVM balance should be ZERO after deposit");
     }
 
     function testTransfer() public {
@@ -43,7 +44,7 @@ contract UndisclosedTransferTest is Test {
 
         secretContract.transfer(sender, recipient, TRANSFER_AMOUNT);
 
-        assertEq(secretContract.balances(sender), DEPOSIT_AMOUNT - TRANSFER_AMOUNT, "Sender balance should decrease");
-        assertEq(address(recipient).balance, TRANSFER_AMOUNT, "Recipient should now hold TRANSFER_AMOUNT");
+        assertEq(secretContract.balances(sender), DEPOSIT_AMOUNT - TRANSFER_AMOUNT, "Sender Secret balance should decrease after transfer");
+        assertEq(address(recipient).balance, TRANSFER_AMOUNT, "Recipient EVM balance should be TRANSFER_AMOUNT after transfer");
     }
 }
