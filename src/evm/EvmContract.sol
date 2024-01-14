@@ -20,7 +20,7 @@ contract EvmContract {
         escrow.deposit{value: msg.value}();
 
         bytes memory payload = abi.encode(sender, msg.value);
-        gateway._executeSecret("", "", payload);
+        gateway.callSecretContract(payload);
     }
 
     function _execute(

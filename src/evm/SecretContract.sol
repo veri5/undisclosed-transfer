@@ -23,7 +23,7 @@ contract SecretContract {
         balances[sender] -= amount;
 
         bytes memory payload = abi.encode(recipient, amount);
-        gateway._executePublic("", "", payload);
+        gateway.callEvmContract(payload);
     }
 
     function _execute(

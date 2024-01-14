@@ -8,22 +8,21 @@ contract Gateway {
     EvmContract evmContract;
     SecretContract secretContract;
 
-    function setContracts(address evmContractAddress, address secretContractAddress) external {
+    function setContracts(
+        address evmContractAddress, 
+        address secretContractAddress
+    ) external {
         evmContract = EvmContract(evmContractAddress);
         secretContract = SecretContract(secretContractAddress);
     }
 
-    function _executeSecret(
-        string calldata /*sourceChain*/,
-        string calldata /*sourceAddress*/,
+    function callSecretContract(
         bytes calldata payload
     ) external {
         secretContract._execute("", "", payload);
     }
 
-    function _executePublic(
-        string calldata /*sourceChain*/,
-        string calldata /*sourceAddress*/,
+    function callEvmContract(
         bytes calldata payload
     ) external {
         evmContract._execute("", "", payload);
