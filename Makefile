@@ -9,7 +9,7 @@ help:
 	@echo "test                   - Run tests using the forge tool."
 	@echo "clean                  - Clean using the forge tool."
 	@echo "help                   - Display this help message."
-
+	@echo "deploy                 - Deploy using the forge tool."
 
 all: clean build
 
@@ -27,3 +27,7 @@ test:
 # Clean target
 clean:
 	@:; forge clean
+
+# Deploy target
+deploy:
+	@forge script script/UndisclosedTransfer.s.sol:UndisclosedTransferScript --rpc-url http://localhost:8545 --broadcast --legacy
