@@ -8,10 +8,20 @@ contract SecretContract {
 
     mapping(address => uint256) public balances;
 
+    /**
+     * @dev Constructor function to initialize the contract with the Gateway address.
+     * @param gatewayAddress The address of the Gateway contract.
+     */
     constructor(address gatewayAddress) {
         gateway = Gateway(gatewayAddress);
     }
 
+    /**
+     * @dev Transfers funds from sender to recipient, triggering a call to the Gateway contract.
+     * @param sender The address of the sender initiating the transfer.
+     * @param recipient The address of the recipient receiving the transfer.
+     * @param amount The amount of funds to transfer.
+     */
     function transfer(address sender, address recipient, uint256 amount) external {
         require(sender != address(0), "Invalid sender address");
         require(recipient != address(0), "Invalid recipient address");
@@ -26,9 +36,15 @@ contract SecretContract {
         gateway.callEvmContract(payload);
     }
 
+    /**
+     * @dev Executes a transfer by updating the balance of the provided sender with the given amount.
+     * @param sourceChain The source chain identifier (not used in the current implementation).
+     * @param sourceAddress The source address (not used in the current implementation).
+     * @param payload The payload containing sender and amount information.
+     */
     function _execute(
-        string calldata /*sourceChain*/,
-        string calldata /*sourceAddress*/,
+        string calldata sourceChain,
+        string calldata sourceAddress,
         bytes calldata payload
     ) external {
         (address sender, uint256 amount) = abi.decode(payload, (address, uint256));

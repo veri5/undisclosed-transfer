@@ -21,6 +21,9 @@ contract UndisclosedTransferTest is Test {
     address sender;
     address recipient;
 
+    /** 
+     * @dev Set up the test environment by deploying necessary contracts and initializing addresses.
+     */
     function setUp() public {
         escrowAddress = address(new Escrow(makeAddr("owner")));
         gateway = new Gateway();
@@ -32,30 +35,54 @@ contract UndisclosedTransferTest is Test {
         recipient = makeAddr("recipient");
     }
 
+    /** 
+     * @dev Test the deposit functionality.
+     */
     function testDeposit() public {
+        // Deposit funds into the EvmContract
         evmContract.deposit{value: DEPOSIT_AMOUNT}(sender);
 
+        // Check if the Secret balance of the sender has increased
         assertEq(secretContract.balances(sender), DEPOSIT_AMOUNT, "Sender Secret balance should increase after deposit");
+        
+        // Check if the EVM balance of the sender is now 0
         assertEq(address(sender).balance, 0, "Sender EVM balance should be 0 after deposit");
     }
 
+    /** 
+     * @dev Test the transfer functionality.
+     */
     function testTransfer() public {
+        // Deposit funds into the EvmContract
         evmContract.deposit{value: DEPOSIT_AMOUNT}(sender);
 
+        // Perform a transfer from sender to recipient
         secretContract.transfer(sender, recipient, TRANSFER_AMOUNT);
 
+        // Check if the Secret balance of the sender has decreased
         assertEq(secretContract.balances(sender), DEPOSIT_AMOUNT - TRANSFER_AMOUNT, "Sender Secret balance should decrease after transfer");
+        
+        // Check if the EVM balance of the recipient is now TRANSFER_AMOUNT
         assertEq(address(recipient).balance, TRANSFER_AMOUNT, "Recipient EVM balance should be TRANSFER_AMOUNT after transfer");
     }
 
+    /** 
+     * @dev Test the case where the transfer amount exceeds the sender's Secret balance.
+     */
     function testTransferExceedSecretBalance() public {
+        // Deposit funds into the EvmContract
         evmContract.deposit{value: DEPOSIT_AMOUNT}(sender);
 
+        // Attempt a transfer with an amount exceeding the Secret balance
         vm.expectRevert("Insufficient balance");
         secretContract.transfer(sender, recipient, DEPOSIT_AMOUNT + 1);
     }
 
+    /** 
+     * @dev Test the case where a transfer is attempted without a prior deposit.
+     */
     function testTransferWithoutDeposit() public {
+        // Attempt a transfer without a prior deposit
         vm.expectRevert("Insufficient balance");
         secretContract.transfer(sender, recipient, TRANSFER_AMOUNT);
     }
