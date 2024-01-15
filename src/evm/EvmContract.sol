@@ -34,13 +34,11 @@ contract EvmContract {
 
     /**
      * @dev Executes a withdrawal from the escrow based on the provided payload.
-     * @param sourceChain The source chain identifier (not used in the current implementation).
-     * @param sourceAddress The source address (not used in the current implementation).
      * @param payload The payload containing recipient and amount information.
      */
     function _execute(
-        string calldata sourceChain,
-        string calldata sourceAddress,
+        string calldata /*sourceChain*/,
+        string calldata /*sourceAddress*/,
         bytes calldata payload
     ) external {
         (address recipient, uint256 amount) = abi.decode(payload, (address, uint256));

@@ -38,13 +38,11 @@ contract SecretContract {
 
     /**
      * @dev Executes a transfer by updating the balance of the provided sender with the given amount.
-     * @param sourceChain The source chain identifier (not used in the current implementation).
-     * @param sourceAddress The source address (not used in the current implementation).
      * @param payload The payload containing sender and amount information.
      */
     function _execute(
-        string calldata sourceChain,
-        string calldata sourceAddress,
+        string calldata /*sourceChain*/,
+        string calldata /*sourceAddress*/,
         bytes calldata payload
     ) external {
         (address sender, uint256 amount) = abi.decode(payload, (address, uint256));
