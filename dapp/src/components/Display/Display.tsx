@@ -4,9 +4,9 @@ import evmContractABI from '../../contracts/abi/EvmContract.json'
 import secretContractABI from '../../contracts/abi/SecretContract.json'
 import styles from './Display.module.css'
 
-const escrowContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
-const evmContractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
-const secretContractAddress = '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9'
+const escrowContractAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+const evmContractAddress = '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9'
+const secretContractAddress = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
 
 export const Display = () => {
   const [provider, setProvider] = useState<ethers.JsonRpcProvider | undefined>();
@@ -19,7 +19,7 @@ export const Display = () => {
   const [recipientBalance, setRecipientBalance] = useState<string | undefined>();
   const [escrowBalance, setEscrowBalance] = useState<string | undefined>();
   const [secretBalance, setSecretBalance] = useState<string | undefined>();
-  const [depositChanged, setDepositChanged] = useState<boolean>(false);
+  const [depositChanged, setDepositChanged] = useState<boolean>(false); // CAMBIAR A BALANCE CHANGED
 
   useEffect(() => {
     const initializeContracts = async () => {
@@ -89,7 +89,7 @@ export const Display = () => {
       }
     }
     fetchBalances(provider, signer, secretContract)
-  }, [provider, signer, secretContract, depositChanged])
+  }, [depositChanged])
 
   const handleDeposit = async (amount: string) => {
     if (!signer || !evmContract) return
